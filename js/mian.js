@@ -14,15 +14,16 @@ $(function () {
     });
 
     //Handlebars渲染函数
-    function renderTemplate(templateSelector,data,htmlSelector) {
+    function renderTemplate(templateSelector, data, htmlSelector) {
         var t = $(templateSelector).html();
         var f = Handlebars.compile(t);
         var h = f(data);
         $(htmlSelector).html(h);
     }
+
     //点击分页传递当前页数重新渲染页面的函数
     function refreshclasses(curPage) {
-        $.getJSON(GETCLASSES,{curPage: curPage},function (data) {
+        $.getJSON(GETCLASSES, {curPage: curPage}, function (data) {
             renderTemplate("#class-template", data.data, "#classes");
             renderTemplate("#pag-template", formatPag(data), "#pag");
             //点击渲染玩页面还需要重新绑定一下事件 每次点击还要重新绑定比较low逼，所以要写一个委托绑定的函数还替换这个low逼的行为
@@ -34,10 +35,10 @@ $(function () {
             // })
         });
     };
-    
+
     //委托绑定函数
     function bindPageEvent() {
-        $('#pag').delegate('li.clickable','click',function () {
+        $('#pag').delegate('li.clickable', 'click', function () {
             $this = $(this);//封装每次点击的this到一个变量 这样每次点击就不会再次封装jq对象 提高性能
             $this.data('id');
             console.log($this.data('id'));
@@ -46,10 +47,10 @@ $(function () {
     };
     bindPageEvent();
 
-    $.getJSON(GETCLASSES,{curPage: 1},function (data) {
+    $.getJSON(GETCLASSES, {curPage: 1}, function (data) {
         console.log(data);
-        renderTemplate("#class-template",data.data,"#classes");
-        renderTemplate("#pag-template",formatPag(data),"#pag");
+        renderTemplate("#class-template", data.data, "#classes");
+        renderTemplate("#pag-template", formatPag(data), "#pag");
         // $('li.clickable').on('click',function () {
         //     $this = $(this);//封装每次点击的this到一个变量 这样每次点击就不会再次封装jq对象 提高性能
         //     $this.data('id');
@@ -57,26 +58,26 @@ $(function () {
         //     refreshclasses($this.data('id'));
         // })
     });
-    
+
     //遮罩层和笔记本div显示隐藏函数
     function showNote(show) {
-        if (show){
-            $('.overlap').css('display','block');
-            $('.notedetail').css('display','block');
+        if (show) {
+            $('.overlap').css('display', 'block');
+            $('.notedetail').css('display', 'block');
         } else {
-            $('.overlap').css('display','none');
-            $('.notedetail').css('display','none');
+            $('.overlap').css('display', 'none');
+            $('.notedetail').css('display', 'none');
         }
     }
 
     //点击遮罩层的时候隐藏
-    $('.overlap').on('click',function () {
+    $('.overlap').on('click', function () {
         showNote(false);
     })
 
     //委托绑定 点击显示
     function bindClassEvent() {
-        $('#classes').delegate('li','click',function () {
+        $('#classes').delegate('li', 'click', function () {
             $this = $(this);
             var cid = $this.data('id');
 
@@ -108,27 +109,28 @@ $(function () {
 
         })
     }
+
     bindClassEvent();
 
 
-    Handlebars.registerHelper("equal",function (v1,v2,options) {
-        if (v1==v2){
+    Handlebars.registerHelper("equal", function (v1, v2, options) {
+        if (v1 == v2) {
             return options.fn(this);
         } else {
             return options.inverse(this);
         }
     });
 
-    Handlebars.registerHelper("long",function (v,options) {
-        if (v.indexOf('小时') != -1){
+    Handlebars.registerHelper("long", function (v, options) {
+        if (v.indexOf('小时') != -1) {
             return options.fn(this);
         } else {
             return options.inverse(this);
         }
     });
 
-    Handlebars.registerHelper("addone",function (value) {
-        return value+1;
+    Handlebars.registerHelper("addone", function (value) {
+        return value + 1;
     });
     //时间转换helper
     Handlebars.registerHelper("formatDate", function (value) {
